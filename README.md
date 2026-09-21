@@ -41,3 +41,8 @@ A good improvement would be to use adaptive thresholds or combine multiple metri
 The repository simulates a simple event-driven AIOps workflow in which an anomaly is detected from the service telemetry, turned into an event, and then passed through the producer, topic, and consumer before reaching the downstream AIOps component. 
 The producer sends the event to the in-memory topic, the topic stores the message, and the consumer reads it and passes it on for processing. In this dataset, the abnormal records at 10:05 and 10:06 are correctly published and consumed as anomaly events, with the event payload retaining the relevant service, timestamp, type, and reasons for the alert. 
 This confirms that the workflow works as an end-to-end event pipeline and that each component has a clear role in moving the anomaly signal forward.
+
+ 
+## Task 5: Investigate and Correct the Workflow
+
+The workflow had two main issues. First, the detector was checking for WARNING logs, but the operational data uses ERROR logs for the degraded records, so relevant alerts were being missed. Second, the producer and consumer were connected to different in-memory topics, which meant the anomaly events were never reaching the downstream processing stage. These problems were fixed within the existing design by correcting the log condition in the detector and making the producer and consumer share the same topic. After these changes, the workflow runs as intended, the anomaly is detected, the event is published, received, and processed, and the pipeline successfully moves the alert through the full AIOps flow.
