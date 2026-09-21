@@ -52,3 +52,14 @@ The workflow had two main issues. First, the detector was checking for WARNING l
 the command: cd /workspaces/github-skills-challenge && PYTHONPATH=.python src/aiops_pipeline.py.
 The system loaded the telemetry records, processed each entry, and the anomaly detector correctly identified abnormal behaviour based on response time, CPU, memory, and error-level log conditions. 
 Once an anomaly was detected, the event was generated, published to the in-memory topic by the producer, and then consumed by the consumer using the same shared topic instance, confirming the complete event flow. The final output showed that the system processed the data, detected degraded service conditions, published the anomaly event, consumed it successfully, and surfaced the operational issue in a meaningful final AIOps result. This demonstrates that the pipeline works end-to-end and that the detected anomaly represents a real service issue requiring attention.
+
+
+## Task 7: Update the README
+This project demonstrates a lightweight AIOps workflow for a payment-processing service that monitors response time, CPU, memory, and log events.
+The dataset is mostly healthy, but around 10:05 and 10:06 it shows a clear incident where response time spikes to 610–640 ms, CPU reaches 75–94%, memory reaches 70–91%, and ERROR messages appear.
+This indicates a real service degradation, and the anomaly detector correctly flags these records.
+The event flow works as intended: data is read, anomalies are detected, events are generated, the producer publishes them to the topic, and the consumer reads the same topic to process the issue.
+The final workflow was executed successfully with the command “cd /workspaces/github-skills-challenge && PYTHONPATH=. python src/aiops_pipeline.py,” and it exited with code 0, confirming that the operational data was processed, the anomaly was detected, the event was published and consumed, and the final output reflected the actual issue. 
+The main issues fixed were a wrong WARNING check in the detector and incorrect topic wiring between the producer and consumer.
+One limitation is that the approach uses fixed thresholds, so a possible improvement is adaptive thresholds or more advanced correlation logic.
+To reproduce it, another user should install dependencies if needed and run the same pipeline command from the repository root.
