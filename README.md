@@ -46,3 +46,9 @@ This confirms that the workflow works as an end-to-end event pipeline and that e
 ## Task 5: Investigate and Correct the Workflow
 
 The workflow had two main issues. First, the detector was checking for WARNING logs, but the operational data uses ERROR logs for the degraded records, so relevant alerts were being missed. Second, the producer and consumer were connected to different in-memory topics, which meant the anomaly events were never reaching the downstream processing stage. These problems were fixed within the existing design by correcting the log condition in the detector and making the producer and consumer share the same topic. After these changes, the workflow runs as intended, the anomaly is detected, the event is published, received, and processed, and the pipeline successfully moves the alert through the full AIOps flow.
+
+## Task 6: Execute the End-to-End Pipeline
+ The end-to-end AIOps workflow was executed successfully from operational data to final incident detection by running the pipeline with
+the command: cd /workspaces/github-skills-challenge && PYTHONPATH=.python src/aiops_pipeline.py.
+The system loaded the telemetry records, processed each entry, and the anomaly detector correctly identified abnormal behaviour based on response time, CPU, memory, and error-level log conditions. 
+Once an anomaly was detected, the event was generated, published to the in-memory topic by the producer, and then consumed by the consumer using the same shared topic instance, confirming the complete event flow. The final output showed that the system processed the data, detected degraded service conditions, published the anomaly event, consumed it successfully, and surfaced the operational issue in a meaningful final AIOps result. This demonstrates that the pipeline works end-to-end and that the detected anomaly represents a real service issue requiring attention.
